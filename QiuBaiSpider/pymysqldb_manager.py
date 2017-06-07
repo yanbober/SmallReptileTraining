@@ -4,9 +4,9 @@ from QiuBaiSpider.tools import Tools
 
 
 class DbManager(object):
-    sql_create_table = """CREATE TABLE IF NOT EXISTS QiuShiBaiKe (
-             name  CHAR(512) NOT NULL,
-             content  CHAR(4096))"""
+    sql_create_table = """CREATE TABLE QiuShiBaiKe (
+             name  TEXT NOT NULL,
+             content  TEXT)"""
 
     def __init__(self):
         self.db = None
@@ -33,7 +33,7 @@ class DbManager(object):
     def insertDict(self, dict_data=None):
         if dict_data is None:
             return False
-        sql = "INSERT INTO QiuShiBaiKe(name, content) VALUES ("+dict_data["name"]+","+dict_data["content"]+")"
+        sql = r"INSERT INTO QiuShiBaiKe(name, content) VALUES ('"+dict_data["name"]+"','"+dict_data["content"]+"')"
         try:
             self.cursor.execute(sql)
             self.db.commit()

@@ -19,6 +19,8 @@ class Main(object):
 
     def _page_run(self, page):
         page_dict_items = PageItems(page).get_page_dict_items()
+        if page_dict_items is None:
+            return
         for dict_item in page_dict_items:
             self.db_manager.insertDict(dict_item)
         pass
