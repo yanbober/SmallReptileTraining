@@ -1,6 +1,9 @@
 from AndroidSpider import url_manager, html_downloader, html_parser, html_output
 
-
+'''
+Extra module:
+BeautifulSoup
+'''
 class SpiderMain(object):
     def __init__(self):
         self.urls = url_manager.UrlManager()
