@@ -1,6 +1,8 @@
 from AndroidSpider import url_manager, html_downloader, html_parser, html_output
 
 '''
+爬取百度百科 Android 关键词相关词及简介并输出为一个HTML tab网页
+
 Extra module:
 BeautifulSoup
 '''

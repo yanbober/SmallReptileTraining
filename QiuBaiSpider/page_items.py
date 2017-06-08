@@ -18,8 +18,7 @@ class PageItems(object):
             req = request.Request(url, headers=headers)
             content = request.urlopen(req).read().decode("utf-8")
 
-            pattern = re.compile(r'<div class="author clearfix">.*?<h2>(.*?)</h2>.*?<div class="content">(.*?)</div>',
-                                 re.S)
+            pattern = re.compile(r'<div class="author clearfix">.*?<h2>(.*?)</h2>.*?<div class="content">(.*?)</div>', re.S)
             items = re.findall(pattern, content)
             dict_list = list()
             for item in items:
