@@ -12,7 +12,7 @@ Cookie
 class CsdnSpider(object):
     def __init__(self):
         self.url_login = "https://passport.csdn.net/?service=http://write.blog.csdn.net/feedback"
-        self.url_feedback = "http://write.blog.csdn.net/feedback"
+        self.url_feedback = "http://write.blog.csdn.net/feedback/in/"
         self.opener = self.create_cookie_opener()
         self.opener.addheaders = [
             ("User-Agent",
@@ -68,19 +68,35 @@ class CsdnSpider(object):
             return None
 
     def run_redirect_back(self, redirect=None):
+        '''
+        CSDN登陆后返回一个自动执行的 JS 跳转函数，执行后才能算登录验证成功
+        :param redirect: JS 方法中定义的 redirect 链接
+        :return: 成功失败
+        '''
         if redirect is None:
             return False
         self.opener.open(redirect)
         return True
 
-    def get_feedback_items(self):
-        response = self.opener.open(self.url_feedback)
-        print(str(response.read().decode("utf-8")))
-
+    def get_page_feedback_dict(self, page_index=1):
+        '''
+        获取CSDN我的博客页面的评论管理页面我文章的评论列表（按照评论页数获取）
+        :return: {'maxPage'100:, 'dict':[{'article':'xxx', 'url':'xxx', 'commentator':'xxx', 'time':'xxx', 'content':'xxx'}]}
+        '''
+        content = self.opener.open(self.url_feedback+str(page_index)).read().decode("utf-8")
+        max_page = re.search(re.compile(r'<div class="page_nav"><span>.*?共(\d+)页</span>'), content).group(1)
+        return {'maxPage': max_page, 'dict': None}
     def run(self):
-        redirect = self.login("yanbober", "XXXXXXXX")
+        redirect = self.login("yanbober", "yanbo19910322")
         self.run_redirect_back(redirect)
-        self.get_feedback_items()
+
+        cur_page = 1
+        max_page = 1
+        while cur_page <= max_page:
+            print("start get " + str(cur_page) + " page feedback.")
+            page_dict = self.get_page_feedback_dict(cur_page)
+            max_page = int(page_dict['maxPage'])
+            cur_page = cur_page + 1
 
 if __name__ == "__main__":
     CsdnSpider().run()
