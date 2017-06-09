@@ -87,7 +87,7 @@ class CsdnSpider(object):
         max_page = re.search(re.compile(r'<div class="page_nav"><span>.*?共(\d+)页</span>'), content).group(1)
         return {'maxPage': max_page, 'dict': None}
     def run(self):
-        redirect = self.login("yanbober", "yanbo19910322")
+        redirect = self.login("yanbober", "XXXX")
         self.run_redirect_back(redirect)
 
         cur_page = 1
