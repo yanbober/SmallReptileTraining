@@ -16,7 +16,7 @@ class DbManager(object):
 
     def connect(self):
         try:
-            self.db = pymysql.connect("localhost", "yanbober", "19900322", "database_yan_php")
+            self.db = pymysql.connect("localhost", "yanbober", "XXXXXX", "database_yan_php")
             self.db.set_charset('utf8')
             self.cursor = self.db.cursor()
             self.cursor.execute(DbManager.sql_create_table)
