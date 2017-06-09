@@ -74,6 +74,7 @@ class CsdnSpider(object):
         :return: 成功失败
         '''
         if redirect is None:
+            print("run_redirect_back params redirect is None!")
             return False
         self.opener.open(redirect)
         return True
@@ -85,10 +86,23 @@ class CsdnSpider(object):
         '''
         content = self.opener.open(self.url_feedback+str(page_index)).read().decode("utf-8")
         max_page = re.search(re.compile(r'<div class="page_nav"><span>.*?共(\d+)页</span>'), content).group(1)
-        return {'maxPage': max_page, 'dict': None}
+        reg_main = re.compile(r'<tr class ="altitem">.*?<td class ="tdleft">.*?<a href = "(.*?)".*?>(.*?)</a>.*?<a.*?>(.*?)</a>.*?<td>(\d{4}-\d{2}-\d{2} \d{2}:\d{2})</td>.*?<div class ="recon">(.*?)</div>', re.S)
+        main_items = re.findall(reg_main, content)
+        dict_list = list()
+        for item in main_items:
+            dict_list.append({
+                'url': item[0],
+                'article': item[1],
+                'commentator': item[2],
+                'time': item[3],
+                'content': item[4]
+            })
+        print("-------"+str(dict_list))
+        return {'maxPage': max_page, 'dict': dict_list}
     def run(self):
         redirect = self.login("yanbober", "XXXX")
-        self.run_redirect_back(redirect)
+        if self.run_redirect_back(redirect) is False:
+            return
 
         cur_page = 1
         max_page = 1
