@@ -1,5 +1,5 @@
 '''
-知乎登录及列表获取
+知乎登录(使用手机号登录)
 Extra module:
 requests
 BeautifulSoup
@@ -12,7 +12,7 @@ class ZhiHuMain(object):
         self.login = ZhiHuLogIn()
 
     def run(self):
-        self.login.login('XXXX', 'XXXX')
+        self.login.login('phone number', 'password')
 
 if __name__ == '__main__':
     ZhiHuMain().run()

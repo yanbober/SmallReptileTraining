@@ -7,7 +7,15 @@ class ZhiHuLogIn(object):
     def __init__(self):
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.100 Safari/537.36',
-            'Host': 'www.zhihu.com'
+            'Host': 'www.zhihu.com',
+            'Origin': 'https://www.zhihu.com',
+            'Referer': 'https://www.zhihu.com/',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+            'Accept': '*/*',
+            'Accept-Encoding': 'gzip,deflate,br',
+            'Accept-Language': 'zh - CN,zh;q=0.8',
+            'Connection': 'keep-alive'
         }
         self.request_session = requests.session()
         self.request_session.headers.update(self.headers)
@@ -44,9 +52,10 @@ class ZhiHuLogIn(object):
             '_xsrf': str(valid_dict['xsrf']),
             'captcha_type': 'cn',
             'captcha': self.parse_captcha_manual(valid_dict['captcha_content']),
-            'account': account,
+            'phone_num': account,
             'password': pwd
         }
-        url_real_login = 'http://www.zhihu.com/login/email'
+        print(str(post_data))
+        url_real_login = 'http://www.zhihu.com/login/phone_num'
         response = self.request_session.post(url_real_login, post_data)
         print(str(response.content.decode('utf8')))
