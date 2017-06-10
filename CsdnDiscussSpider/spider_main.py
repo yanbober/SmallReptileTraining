@@ -39,7 +39,7 @@ class CsdnSpider(object):
             content = self.opener.open(self.url_login).read().decode("utf8")
             lt = re.search(re.compile(r'<input type="hidden" name="lt" value="(.*?)"'), content)
             execution = re.search(re.compile(r'<input type="hidden" name="execution" value="(.*?)"'), content)
-            return {'lt': lt[1], 'execution': execution[1], '_eventId': 'submit'}
+            return {'lt': lt.group(1), 'execution': execution.group(1), '_eventId': 'submit'}
         except Exception as e:
             print("get random webflow form Exception."+str(e))
             return dict()
@@ -58,11 +58,11 @@ class CsdnSpider(object):
         post_form['username'] = user_name
         post_form['password'] = password
         post_data = urlencode(post_form).encode("utf8")
-
+        print(str(post_form))
         try:
             content = self.opener.open(self.url_login, data=post_data).read().decode("utf8")
             redirect = re.search(re.compile(r'var redirect = "(.*?)"'), content)
-            return redirect[1]
+            return redirect.group(1)
         except Exception as e:
             print("login Exception."+str(e))
             return None
@@ -85,8 +85,9 @@ class CsdnSpider(object):
         :return: {'maxPage'100:, 'dict':[{'article':'xxx', 'url':'xxx', 'commentator':'xxx', 'time':'xxx', 'content':'xxx'}]}
         '''
         content = self.opener.open(self.url_feedback+str(page_index)).read().decode("utf-8")
+        print(content)
         max_page = re.search(re.compile(r'<div class="page_nav"><span>.*?共(\d+)页</span>'), content).group(1)
-        reg_main = re.compile(r'<tr class ="altitem">.*?<td class ="tdleft">.*?<a href = "(.*?)".*?>(.*?)</a>.*?<a.*?>(.*?)</a>.*?<td>(\d{4}-\d{2}-\d{2} \d{2}:\d{2})</td>.*?<div class ="recon">(.*?)</div>', re.S)
+        reg_main = re.compile(r"<tr class='altitem'>.*?<a href='(.*?)'.*?>(.*?)</a></td><td><a.*?class='user_name' target=_blank>(.*?)</a></td><td>(.*?)</td>.*?<div class='recon'>(.*?)</div></td></tr>", re.S)
         main_items = re.findall(reg_main, content)
         dict_list = list()
         for item in main_items:
@@ -97,20 +98,23 @@ class CsdnSpider(object):
                 'time': item[3],
                 'content': item[4]
             })
-        print("-------"+str(dict_list))
         return {'maxPage': max_page, 'dict': dict_list}
-    def run(self):
-        redirect = self.login("yanbober", "XXXX")
+
+    def run(self, name=None, pwd=None):
+        redirect = self.login(name, pwd)
         if self.run_redirect_back(redirect) is False:
             return
 
+        total_feedback = 0;
         cur_page = 1
         max_page = 1
         while cur_page <= max_page:
             print("start get " + str(cur_page) + " page feedback.")
             page_dict = self.get_page_feedback_dict(cur_page)
+            total_feedback = total_feedback + len(page_dict['dict'])
             max_page = int(page_dict['maxPage'])
             cur_page = cur_page + 1
+        print("Finish! Toal valid feedback is:"+str(total_feedback))
 
 if __name__ == "__main__":
-    CsdnSpider().run()
+    CsdnSpider().run("[Your CSDN Uasename]", "[Your CSDN Password]")
