@@ -6,8 +6,7 @@ from urllib.parse import urlencode
 '''
 登录CSDN帐号后爬取我的博客评论管理列表
 
-Extra module:
-Cookie
+Customer opener Cookie
 '''
 class CsdnSpider(object):
     def __init__(self):
