@@ -1,3 +1,5 @@
+from urllib.parse import urlencode
+
 import requests
 import time
 from bs4 import BeautifulSoup
@@ -56,6 +58,7 @@ class ZhiHuLogIn(object):
             'password': pwd
         }
         print(str(post_data))
+        e_post_data = urlencode(post_data).encode("utf8")
         url_real_login = 'http://www.zhihu.com/login/phone_num'
-        response = self.request_session.post(url_real_login, post_data)
+        response = self.request_session.post(url_real_login, e_post_data)
         print(str(response.content.decode('utf8')))
