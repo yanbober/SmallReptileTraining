@@ -1,14 +1,38 @@
+import re
 from lxml import etree
 
 
 class HtmlParser(object):
-    pass
-
     def parse_main_subjects(self, content):
-        print(str(content))
+        '''
+        解析美图录网站主页模特分类页面链接
+        :param content: 美图录主页内容
+        :return: ['一个模特的大图页面', '一个模特的大图页面']
+        '''
         html = etree.HTML(content.lower())
-        subject = html.xpath('//ul[@class="img"]/li/a')
-        print(str(len(subject)))
-        for href in subject:
-            print(href.attrib)
-        return list()
+        subject = html.xpath('//ul[@class="img"]/li')
+        subject_urls = list()
+        for sub in subject:
+            a_href = sub[0].get('href')
+            subject_urls.append(a_href)
+        return subject_urls
+
+    def parse_subject_mj_info(self, content):
+        '''
+        获取具体模特大图页面开头的模特信息
+        :param content: 一个类别的模特页面内容
+        :return: {'count': 该模特具备图总数, 'mj_name': 模特名字}
+        '''
+        html = etree.HTML(content.lower())
+        div_cl = html.xpath('//div[@class="c_l"]')
+        pic_count = re.search(re.compile(r'.*?(\d+).*?'), div_cl[0][2].text).group(1)
+        return {'count': pic_count, 'mj_name': div_cl[0][4].text}
+
+    def parse_page_pics(self, content):
+        '''
+        获取一个模特页面的模特大图下载链接
+        :param content: 一个类别的模特页面内容
+        :return: ['大图链接', '大图链接']
+        '''
+        html = etree.HTML(content.lower())
+        return html.xpath('//div[@class="content"]/center/img/@src')
