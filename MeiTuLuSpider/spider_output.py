@@ -15,6 +15,10 @@ class OutPutUse(object):
         if os.path.exists(save_dir) is False:
             os.makedirs(save_dir)
         save_file = save_dir + os.path.sep + url.split("/")[-1]
+
+        if os.path.exists(save_file):
+            print('本地已经存在该图片:', mj_name, url)
+            return
         try:
             content = requests.get(url, timeout=60).content
             with open(save_file, "wb") as file_input:
