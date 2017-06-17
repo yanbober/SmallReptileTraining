@@ -23,5 +23,5 @@ class OutPutUse(object):
             content = requests.get(url, timeout=60).content
             with open(save_file, "wb") as file_input:
                 file_input.write(content)
-        except requests.exceptions.ConnectionError:
+        except Exception:
             print('#ERROR# 下载[%s]的图片:%s出错！', mj_name, url)

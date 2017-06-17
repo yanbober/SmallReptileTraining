@@ -31,6 +31,8 @@ class Scheduler(object):
         print('#subject_url#:'+subject_url)
         content = self.downloader.download(subject_url, retry_count=2, headers=self.headers).decode('utf8')
         mj_info = self.parser.parse_subject_mj_info(content)
+        if mj_info is None:
+            return
         mj_max_count = int(mj_info['count'])
         mj_name = str(mj_info['mj_name'])
         cur_count = 1
