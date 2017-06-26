@@ -1,13 +1,10 @@
 '''
-Python3 常用数据库持久化演示
+Python3 MySQL数据库持久化演示
 '''
 import pymysql
 
 
 class MySQLPersistence(object):
-    '''
-    普通文件持久化或者缓存持久化
-    '''
     def __init__(self):
         self.db = None
         self.cursor = None
@@ -32,18 +29,21 @@ class MySQLPersistence(object):
         try:
             if self.db is not None:
                 self.db.close()
-            if self.db is not None:
+            if self.cursor is not None:
                 self.cursor.close()
         except BaseException as e:
             print("mysql close failed."+str(e))
 
     def insert_table_dict(self, dict_data=None):
+        if self.db is None or self.cursor is None:
+            print('Please ensure you have connected to mysql server!')
+            return False
         if dict_data is None:
             return False
         try:
             cols = ', '.join(dict_data.keys())
             values = '"," '.join(dict_data.values())
-            sql_insert = "INSERT INTO `QiuShiBaiKe`(%s) VALUES (%s)" % (cols, '"'+values+'"')
+            sql_insert = "INSERT INTO `StudentTable`(%s) VALUES (%s)" % (cols, '"'+values+'"')
             self.cursor.execute(sql_insert)
             self.db.commit()
         except BaseException as e:
@@ -52,11 +52,14 @@ class MySQLPersistence(object):
         return True
 
     def get_dict_by_name(self, name=None):
+        if self.db is None or self.cursor is None:
+            print('Please ensure you have connected to mysql server!')
+            return None
         if name is None:
             sql_select_table = "SELECT * FROM `StudentTable`"
         else:
             sql_select_table = "SELECT * FROM `StudentTable` WHERE name==%s" % ('"'+name+'"')
-        self.cursor.execute(sql_select_table)
+        return self.cursor.execute(sql_select_table, type=list)
 
 
 if __name__ == '__main__':
@@ -66,3 +69,5 @@ if __name__ == '__main__':
     t_mysql.insert_table_dict({'name': 'Test2', 'content': 'vvvvvvvvvvvv'})
     t_mysql.insert_table_dict({'name': 'Test3', 'content': 'qqqqqqqqqqqq'})
     t_mysql.insert_table_dict({'name': 'Test4', 'content': 'wwwwwwwwwwwww'})
+    print('MySQLPersistence get Test2: ' + str(t_mysql.get_dict_by_name('Test2')))
+    print('MySQLPersistence get All: ' + str(t_mysql.get_dict_by_name()))
