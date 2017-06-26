@@ -11,7 +11,7 @@ class MySQLPersistence(object):
 
     def connect(self):
         try:
-            self.db = pymysql.connect("localhost", "yanbober", "XXXXXX", "database_yan_php")
+            self.db = pymysql.connect("localhost", "yanbober", "TQJJtaJWNbGAMU44", "database_yan_php")
             self.db.set_charset('utf8')
             self.cursor = self.db.cursor()
 
@@ -58,9 +58,12 @@ class MySQLPersistence(object):
         if name is None:
             sql_select_table = "SELECT * FROM `StudentTable`"
         else:
-            sql_select_table = "SELECT * FROM `StudentTable` WHERE name==%s" % ('"'+name+'"')
-        return self.cursor.execute(sql_select_table, type=list)
-
+            sql_select_table = "SELECT * FROM `StudentTable` WHERE name=%s" % ('"'+name+'"')
+        self.cursor.execute(sql_select_table)
+        ret_list = list()
+        for item in self.cursor.fetchall():
+            ret_list.append({'id': item[0], 'name': item[1], 'content': item[2]})
+        return ret_list
 
 if __name__ == '__main__':
     t_mysql = MySQLPersistence()
@@ -71,3 +74,4 @@ if __name__ == '__main__':
     t_mysql.insert_table_dict({'name': 'Test4', 'content': 'wwwwwwwwwwwww'})
     print('MySQLPersistence get Test2: ' + str(t_mysql.get_dict_by_name('Test2')))
     print('MySQLPersistence get All: ' + str(t_mysql.get_dict_by_name()))
+    t_mysql.close()

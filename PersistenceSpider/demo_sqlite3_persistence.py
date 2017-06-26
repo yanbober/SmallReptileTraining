@@ -61,3 +61,4 @@ if __name__ == '__main__':
     t_sqlite3.insert_table_dict({'name': 'Test4', 'content': 'wwwwwwwwwwwww'})
     print('Sqlite3Persistence get Test2: ' + str(t_sqlite3.get_dict_by_name('Test2')))
     print('Sqlite3Persistence get All: ' + str(t_sqlite3.get_dict_by_name()))
+    t_sqlite3.close()
