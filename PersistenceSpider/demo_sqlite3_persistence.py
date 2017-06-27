@@ -45,9 +45,9 @@ class Sqlite3Persistence(object):
             sql_select_table = "SELECT * FROM `DemoTable`"
         else:
             sql_select_table = "SELECT * FROM `DemoTable` WHERE name==%s" % ('"'+name+'"')
-        cursor = self.db.execute(sql_select_table)
+        cursor_rows = self.db.execute(sql_select_table)
         ret_list = list()
-        for row in cursor:
+        for row in cursor_rows:
             ret_list.append({'id': row[0], 'name': row[1], 'content': row[2]})
         return ret_list
 

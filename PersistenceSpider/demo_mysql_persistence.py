@@ -61,8 +61,8 @@ class MySQLPersistence(object):
             sql_select_table = "SELECT * FROM `StudentTable` WHERE name=%s" % ('"'+name+'"')
         self.cursor.execute(sql_select_table)
         ret_list = list()
-        for item in self.cursor.fetchall():
-            ret_list.append({'id': item[0], 'name': item[1], 'content': item[2]})
+        for row in self.cursor.fetchall():
+            ret_list.append({'id': row[0], 'name': row[1], 'content': row[2]})
         return ret_list
 
 if __name__ == '__main__':
