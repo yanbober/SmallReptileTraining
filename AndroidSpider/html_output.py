@@ -11,8 +11,8 @@ class HtmlOutput(object):
         self.datas.append(data)
 
     def output_html(self):
-        file_name = time.strftime("%Y-%m-%d_%H:%M:%S")
-        with open("out_%s.html" % file_name, "w") as f_out:
+        file_name = time.strftime("%Y-%m-%d_%H-%M-%S")
+        with open("out_%s.html" % file_name, "w", encoding='utf-8') as f_out:
             f_out.write("<html>")
             f_out.write(r'<head>'
                         r'<link rel="stylesheet" '
