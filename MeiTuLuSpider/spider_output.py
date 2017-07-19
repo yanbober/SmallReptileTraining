@@ -24,4 +24,4 @@ class OutPutUse(object):
             with open(save_file, "wb") as file_input:
                 file_input.write(content)
         except Exception:
-            print('#ERROR# 下载[%s]的图片:%s出错！', mj_name, url)
+            print('#download_and_save# 下载{0}的图片:{1}出错！'.format(mj_name, url))
