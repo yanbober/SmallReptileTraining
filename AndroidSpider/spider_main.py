@@ -1,5 +1,5 @@
 #from AndroidSpider import url_manager, html_downloader, html_parser, html_output
-import url_manager, html_downloader, html_parser, html_output
+import url_manager, html_downloader, html_parser, html_output, sys
 
 '''
 爬取百度百科 Android 关键词相关词及简介并输出为一个HTML tab网页
@@ -28,7 +28,7 @@ class SpiderMain(object):
                 new_urls, new_data = self.parser.parse(new_url, html_content, "utf-8")
                 self.urls.add_new_urls(new_urls)
                 self.out_put.collect_data(new_data)
-                if count >= 100:
+                if count >= count_limit:
                     break
                 count = count + 1
             except Exception as e:
@@ -36,6 +36,8 @@ class SpiderMain(object):
         self.out_put.output_html()
 
 if __name__ == "__main__":
-    rootUrl = "http://baike.baidu.com/item/Android"
+    #rootUrl = "https://baike.baidu.com/item/%E7%8B%97/85474#hotspotmining"
+    rootUrl = sys.argv[1] # 获取命令行参数
+    count_limit = int(sys.argv[2])
     objSpider = SpiderMain()
     objSpider.craw(rootUrl)
