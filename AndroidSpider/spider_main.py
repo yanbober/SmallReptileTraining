@@ -1,4 +1,5 @@
-from AndroidSpider import url_manager, html_downloader, html_parser, html_output
+#from AndroidSpider import url_manager, html_downloader, html_parser, html_output
+import url_manager, html_downloader, html_parser, html_output
 
 '''
 爬取百度百科 Android 关键词相关词及简介并输出为一个HTML tab网页
@@ -27,7 +28,7 @@ class SpiderMain(object):
                 new_urls, new_data = self.parser.parse(new_url, html_content, "utf-8")
                 self.urls.add_new_urls(new_urls)
                 self.out_put.collect_data(new_data)
-                if count >= 30:
+                if count >= 100:
                     break
                 count = count + 1
             except Exception as e:
