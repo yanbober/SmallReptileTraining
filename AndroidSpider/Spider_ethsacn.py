@@ -33,21 +33,35 @@ response=urllib2.urlopen(request1)
 # 服务器返回的类文件对象支持python文件对象的操作方法
 #html=response.read()
 #print(html.decode('utf-8')) 
-
 soup=BeautifulSoup(response,"html.parser")
+for i in soup.find_all('td'):
+    tbody=i.get_text() 
+    print(tbody.encode('gbk','ignore'))
+#print(soup1.encode('gbk','ignore'))
+
+'''
+soup=BeautifulSoup(response,"html.parser")
+for i in soup.find_all('tbody'):
+    tbody=i.get_text() 
+    print(type(i),type(tbody),tbody.encode('gbk','ignore'))
+#print(soup1.encode('gbk','ignore'))
+
+'''
+'''
 for i in soup.find_all('tbody'):
 	
 	# .get_text() 用于获取文本内容，括号内可以加关键词
-	tx=i.get_text("/")
-	print(tx.encode('gbk','ignore'))  #encode('gbk','ignore')忽略GBK字符串报错
-'''
+	text=i.get_text("/")
+	print(text.encode('gbk','ignore'),'==')  #encode('gbk','ignore')忽略GBK字符串报错
+
+
 
 for i in range(3):
     url = 'https://etherscan.io/txs?a=0xbd168cbf9d3a375b38dc51a202b5e8a4e52069ed&p='+str(i+1)
     print(url)
     page = request.urlopen("https://www.baidu.com/")
-    '''
-'''for i in range(3):
+
+for i in range(3):
     url = 'https://etherscan.io/txs?a=0xbd168cbf9d3a375b38dc51a202b5e8a4e52069ed&p='+str(i+1)+'/'
     page = request.urlopen(url)
     soup = BeautifulSoup(page)
