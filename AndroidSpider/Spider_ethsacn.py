@@ -1,12 +1,10 @@
-#-*-coding:utf-8-*-
-
+#-*-coding:utf-8 -*-
+# 将ETHSCAN记录保存的脚本
 import urllib.request as urllib2
 from urllib import request
 import random
 from bs4 import BeautifulSoup
 
-
-url="https://etherscan.io/txs?a=0xbd9d6e7489a7b450937fa7ecbabd71be819bee3d&p=1"
 '''
 # user_agent是爬虫与反爬虫斗争的第一步
 ua_headers = {
@@ -23,49 +21,41 @@ ua_list = [
 
 user_agent=random.choice(ua_list)
 
-# 通过Request()方法构造一个请求对象
+#要查询的以太地址
+address="0xBD9d6e7489A7b450937fA7ECbAbd71Be819beE3D"
+page_number_start=0
+page_count=10
+for ii in range(page_count):
+	page_number_start=page_number_start+1
+	page_number=str(page_number_start)
 
-request1=urllib2.Request(url=url)
-# 把头添加进去
-request1.add_header('User-Agent',user_agent)
-# 向指定的url地址发送请求，并返回服务器响应的类文件对象
-response=urllib2.urlopen(request1)
-# 服务器返回的类文件对象支持python文件对象的操作方法
-#html=response.read()
-#print(html.decode('utf-8')) 
-soup=BeautifulSoup(response,"html.parser")
-for i in soup.find_all('td'):
-    tbody=i.get_text() 
-    print(tbody.encode('gbk','ignore'))
-#print(soup1.encode('gbk','ignore'))
+	url="https://etherscan.io/txs?a="+address+"&p="+page_number
 
-'''
-soup=BeautifulSoup(response,"html.parser")
-for i in soup.find_all('tbody'):
-    tbody=i.get_text() 
-    print(type(i),type(tbody),tbody.encode('gbk','ignore'))
-#print(soup1.encode('gbk','ignore'))
+	# 通过Request()方法构造一个请求对象
 
-'''
-'''
-for i in soup.find_all('tbody'):
-	
-	# .get_text() 用于获取文本内容，括号内可以加关键词
-	text=i.get_text("/")
-	print(text.encode('gbk','ignore'),'==')  #encode('gbk','ignore')忽略GBK字符串报错
+	request1=urllib2.Request(url=url)
+	# 把头添加进去
+	request1.add_header('User-Agent',user_agent)
+	# 向指定的url地址发送请求，并返回服务器响应的类文件对象
+	response=urllib2.urlopen(request1)
+	# 服务器返回的类文件对象支持python文件对象的操作方法
+	#html=response.read()
+	#print(html.decode('utf-8')) 
+	soup=BeautifulSoup(response,"html.parser")
 
+	k=0
+	for i in soup.find_all('td',limit=400):
+		k=k+1
+		m=k%8
+
+		if m==0:
+			br='\n'
+		else:
+			br=''
+		tbody=i.get_text() 
+		data=str(tbody.encode('gbk','ignore'))+","+br
+		with open('test11.csv', 'a') as f:
+			f.write(data)
 
 
-for i in range(3):
-    url = 'https://etherscan.io/txs?a=0xbd168cbf9d3a375b38dc51a202b5e8a4e52069ed&p='+str(i+1)
-    print(url)
-    page = request.urlopen("https://www.baidu.com/")
-
-for i in range(3):
-    url = 'https://etherscan.io/txs?a=0xbd168cbf9d3a375b38dc51a202b5e8a4e52069ed&p='+str(i+1)+'/'
-    page = request.urlopen(url)
-    soup = BeautifulSoup(page)
-    for link in soup.find_all('div','wrapper'):
-        context = link.get_text()
-        print(context)
-'''
+	print("已完成:",str(page_number)+"/"+str(page_count))
