@@ -4,7 +4,7 @@
 
 
 import urllib.request as urllib2
-import random
+import random, re
 from bs4 import BeautifulSoup
 
 '''
@@ -32,7 +32,7 @@ Img_Name='girl'
 
 page_number_s=0
 # 图片总页数
-page_count=1
+page_count=7
 
 
 for p in range(page_count):
@@ -59,8 +59,11 @@ for p in range(page_count):
 	#.decode('utf-8', 'ignore').replace(u'\xa9', u'')
 	soup=BeautifulSoup(response,"html.parser")
 	#for i in soup.find_all('div',{'class':'il_img'}):
+	img_name=0
 	for i in soup.find_all('div',{'class':{'il_img',}}):
+		img_name=img_name+1
 		for ii in i.find_all('a'):
+
 			# 可以直接取属性获得href内容 https://bbs.csdn.net/topics/392161042?list=lz
 			url2='http://www.ivsky.com'+ii['href']
 			request2=urllib2.Request(url=url2)
@@ -69,11 +72,17 @@ for p in range(page_count):
 			response2=urllib2.urlopen(request2)
 			response2.encoding=('utf-8', 'ignore')
 			soup2=BeautifulSoup(response2,"html.parser")
-			soup22=soup2.find_all('div',{'class':{'left',}})
-			for url3 in soup22.find_all("a"):
+			soup22=soup2.find_all('img',{'id':'imgis'})
 
 			#url3=soup2.find_all('div',{'class':'bt-green'})
-				print(url3)
+			img_url=re.findall('src="+(.*)"', str(soup22))[0]
+
+		
+			urllib2.urlretrieve(img_url,'/Users/lhuibin/py/img/%s%s.jpg' % (page_number_s,img_name))
+			print('%s%s.jpg已下载' % (page_number_s,img_name))
+
+
+print("已经全部下载完毕！")
 
 
 '''
