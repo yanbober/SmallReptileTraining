@@ -64,16 +64,16 @@ for p in range(page_count):
 			# 可以直接取属性获得href内容 https://bbs.csdn.net/topics/392161042?list=lz
 			url2='http://www.ivsky.com'+ii['href']
 			request2=urllib2.Request(url=url2)
-
 			request2.add_header('User-Agent',user_agent)
 
 			response2=urllib2.urlopen(request2)
 			response2.encoding=('utf-8', 'ignore')
 			soup2=BeautifulSoup(response2,"html.parser")
-			url3=soup2.find_all()
+			soup22=soup2.find_all('div',{'class':{'left',}})
+			for url3 in soup22.find_all("a"):
 
 			#url3=soup2.find_all('div',{'class':'bt-green'})
-			print(url3)
+				print(url3)
 
 
 '''
