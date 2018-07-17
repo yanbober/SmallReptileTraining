@@ -24,20 +24,65 @@ ua_list = [
 user_agent=random.choice(ua_list)
 
 #要爬取的关键词，中文编码出错，待解决
-Img_Name='girl'
-
+Img_Name='new'
+url_pre="http://www.ivsky.com/search.php?q="+Img_Name+"&PageNo="
 # 构造图片页数
+# 利用抛出错误的代码，判断结果小于2也的情况
+page_count1=0
+page_count2=1
+while page_count2>page_count1:
+	request_pre=urllib2.Request(url=url_pre+str(page_count2))
+
+	request_pre.add_header('User-Agent',user_agent)
+
+	response_pre=urllib2.urlopen(request_pre)
+
+	soup_pre=BeautifulSoup(response_pre,"html.parser")
+	aaa=soup_pre.find_all('div',{'class':'pagelist'})
+	for a_a in aaa:
+		a_a_a=a_a.get_text(',')
+		a_a_a=a_a_a.split(',')
+		page_count1=int(a_a_a[-2])
+
+	if a_a_a[-1]!='下一页':
+
+		break
+
+	print('正在计算总页数，已搜索到第%s页' %page_count1)
+	request_pre1=urllib2.Request(url=url_pre+str(page_count1))
+	request_pre1.add_header('User-Agent',user_agent)
+
+	response_pre1=urllib2.urlopen(request_pre1)
+
+	soup_pre1=BeautifulSoup(response_pre1,"html.parser")
+	aaa1=soup_pre1.find_all('div',{'class':'pagelist'})
+	for a_a1 in aaa1:
+		a_a_a1=a_a1.get_text(',')
+		a_a_a1=a_a_a1.split(',')
+		page_count2=int(a_a_a1[-2])
+
+	if a_a_a[-1]!='下一页':
+		break
+if page_count1>page_count2:
+	page_count=page_count1
+else:
+	page_count=page_count2
+# 得用类解决上边代码重复问题
+
 
 page_number_s=0
 # 图片总页数，待更新自动获取总页数。
-page_count=7
+#page_count=1
+print('计算完成，关键词为%s的图片总计有%s页' %(Img_Name,page_count))
 
+print('现在开始下载...')
 for p in range(page_count):
 	page_number_s=page_number_s+1
 	page_number=str(page_number_s)
 
 	# 构建URL
-	url="http://www.ivsky.com/search.php?q="+Img_Name+"&PageNo="+page_number
+	url=url_pre+page_number
+
 
 	# 通过Request()方法构造一个请求对象
 
@@ -78,9 +123,8 @@ for p in range(page_count):
 
 			# 这是WIN10HOME下的目录
 			urllib2.urlretrieve(img_url,'C:/py/img/%s%s.jpg' % (page_number_s,img_name))
-			print('%s%s.jpg已下载' % (page_number_s,img_name))
+			print('正在下载第%s页第%s张图片，总计%s页' %(page_number_s,img_name,page_count))
+			print('存储为C:/py/img/%s%s.jpg' % (page_number_s,img_name))
 
 
 print("已经全部下载完毕！")
-
-
