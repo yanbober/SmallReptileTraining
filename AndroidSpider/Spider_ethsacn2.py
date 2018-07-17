@@ -31,6 +31,7 @@ for ii in range(page_count):
 
 	#url="https://etherscan.io/txs?a="+address+"&p="+page_number
 	url='https://etherscan.io/txsInternal?a='+address+'&&valid=true&p='+page_number
+	print(url)
 
 	# 通过Request()方法构造一个请求对象
 
@@ -44,9 +45,10 @@ for ii in range(page_count):
 	#print(html.decode('utf-8')) 
 	soup=BeautifulSoup(response,"html.parser")
 
-	k=0
-	for i in soup.find_all('form',{'id':'ctl00'}):
-		print(i.get_text())
+	#k=0
+	# 只能访问第个标签的内容，怎么解决
+	for i in soup.find_all('table',{'class':'table table-hover'}):
+		print(i)
 		'''k=k+1
 		m=k%7
 
@@ -60,4 +62,4 @@ for ii in range(page_count):
 			f.write(data)
 '''
 
-	print("已完成:",str(page_number)+"/"+str(page_count))
+	#print("已完成:",str(page_number)+"/"+str(page_count))
