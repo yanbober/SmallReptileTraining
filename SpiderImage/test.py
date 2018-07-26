@@ -1,40 +1,18 @@
-# -*- coding:utf-8 -*-
-
-from urllib import request
-from urllib import parse
-import json
+# -*- coding:UTF-8 -*-
+from bs4 import BeautifulSoup
+import requests
 
 if __name__ == '__main__':
-	Request_URL='http://fanyi.youdao.com/translate_o?smartresult=dict&smartresult=rule'
-	Form_Date={}
-	Form_Date['from']='AUTO'
-	Form_Date['to']='AUTO'
-	Form_Date['smartresult']='dict'
-	Form_Date['salt']='1532162790927'
-	Form_Date['sign']='0de828ac92067f5078cb84f32b613623'
-	Form_Date['i']='jack'
-	Form_Date['doctype']='json'
-	Form_Date['type']='en2zh-CHS'
-	Form_Date['version']='2.1'
-	Form_Date['keyfrom']='fanyi.web'
-	Form_Date['action']='FY_BY_REALTIME'
-	Form_Date['typoResult']='false'
-	data=parse.urlencode(Form_Date).encode('utf-8')
-	response=request.urlopen(Request_URL,data)
-	html=response.read().decode('utf-8')
-	translate_results=json.loads(html)
-	#translate_results=translate_results['translateResult']#[0][0]['tgt']
-	print('翻译的结果是：%s' % html)
-'''
-	i: jack
-from: AUTO
-to: AUTO
-smartresult: dict
-client: fanyideskweb
-salt: 1532162790927
-sign: 0de828ac92067f5078cb84f32b613623
-doctype: json
-version: 2.1
-keyfrom: fanyi.web
-action: FY_BY_CLICKBUTTION
-typoResult: false'''
+    url = 'http://www.shuaia.net/index.html'
+    headers = {
+            "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+    }
+    req = requests.get(url = url,headers = headers)
+    req.encoding = 'utf-8'
+    html = req.text
+    bf = BeautifulSoup(html, 'lxml')
+    targets_url = bf.find_all(class_='item-img')
+    list_url = []
+    for each in targets_url:
+        list_url.append(each.img.get('alt') + '=' + each.get('href'))
+    print(list_url)
