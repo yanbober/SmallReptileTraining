@@ -1,18 +1,10 @@
 # -*- coding:UTF-8 -*-
-from bs4 import BeautifulSoup
-import requests
+import subprocess as sp
 
 if __name__ == '__main__':
-    url = 'http://www.shuaia.net/index.html'
-    headers = {
-            "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
-    }
-    req = requests.get(url = url,headers = headers)
-    req.encoding = 'utf-8'
-    html = req.text
-    bf = BeautifulSoup(html, 'lxml')
-    targets_url = bf.find_all(class_='item-img')
-    list_url = []
-    for each in targets_url:
-        list_url.append(each.img.get('alt') + '=' + each.get('href'))
-    print(list_url)
+    cmd = "ping -n 3 -w 3 127.0.0.1"
+    #执行命令
+    p = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, shell=True)
+    #获得返回结果并解码
+    out = p.stdout.read().decode("gbk")
+    print(out)
